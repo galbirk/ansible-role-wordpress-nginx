@@ -33,11 +33,11 @@ Variables are located in [deafults/main.yml](defaults/main.yml) file.
 hostname: webserver.domain.com
 domain: domain.com
 hostname_no_fqdn: webserver
-install_nginx: false
-install_mariadb: false
-install_php: false
+install_nginx: true
+install_mariadb: true
+install_php: true
 install_wordpress: true # true when creating new host
-add_host: true # Set true when you are adding host to exist installation
+add_host: false # Set true when you are adding host to exist installation
 
 ```
 

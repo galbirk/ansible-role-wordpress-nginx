@@ -2,20 +2,20 @@
 # defaults file for wordpress_nginx_ssl_role
 
 ## General parameters
-hostname: blogtest10.lmsdemo.ga
-domain: lmsdemo.ga
-hostname_no_fqdn: blogtest10
-install_nginx: false
-install_mariadb: false
-install_php: false
+hostname: webserver.domain.com
+domain: domain.com
+hostname_no_fqdn: webserver
+install_nginx: true
+install_mariadb: true
+install_php: true
 install_wordpress: true # true when creating new host
-add_host: true # Set true when you are adding host to exist installation
+add_host: false # Set true when you are adding host to exist installation
 
 ## MariaDB parameters
 mysql_root_password: 'Aa123456'
 
 ## letsencrypt parameters
-certbot_admin_email: galbirkman@gmail.com
+certbot_admin_email: yourmail@mail.com
 
 ## Wordpress parameters
 wordpress_path: '/blog' # Enter the path for wordpress '/blog' or '/wp' or '/' for example.
@@ -25,5 +25,5 @@ wp_db_password: 'Aa123456'
 table_prefix: wp_
 admin_user: gal
 admin_password: Aa123456
-admin_email: galbirk@gmail.com
+admin_email: youreamail@mail.com
 title: gal10

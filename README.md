@@ -8,14 +8,7 @@ Ansible Role to install worpress server and nginx with ssl certificate, generate
   * [General Parameters](#General-Parameters)
   * [MariaDB Parameters](#MariaDB-Parameters)
   * [Let'sencrypt Parameters](#Let'sencrypt-Parameters)
-  * [Wordpress Parameters](#zabbix-parameters)
-  * [Zabbix Favicon Parameters](#zabbix-Favicon-parameters)
-  * [Zabbix Logo Parameters](#Zabbix-logo-parameters)
-  * [Zabbix Creating User Parameters](#Zabbix-Creating-user-parameters)
-  * [Zabbix Creating User Groups Parametes](#Zabbix-Creating-user-groups-Parametes)
-  * [Zabbix Configure Mail Media Type Parameters](#Zabbix-Configure-mail-media-type-parameters)
-  * [Zabbix Configure Email (HTML) Media Type Parameters](#Zabbix-Configure-Email-(HTML)-media-type-parameters)
-  * [Zabbix Parameters for Installing Languages](#Zabbix-Parameters-for-installing-languages)
+  * [Wordpress Parameters](#Wordpress-parameters)
 - [Example Playbook](#Example-Playbook)
 - [License](#License)
 - [Author Information](#Author-Information)
@@ -37,9 +30,9 @@ Variables are located in [deafults/main.yml](defaults/main.yml) file.
 
 ```bash
 ## General parameters
-hostname: blogtest10.lmsdemo.ga
-domain: lmsdemo.ga
-hostname_no_fqdn: blogtest10
+hostname: webserver.domain.com
+domain: domain.com
+hostname_no_fqdn: webserver
 install_nginx: false
 install_mariadb: false
 install_php: false
@@ -52,10 +45,20 @@ add_host: true # Set true when you are adding host to exist installation
 
 **mysql_root_password** --> Root Password for mariaDB.
 
+```bash
+## MariaDB parameters
+mysql_root_password: 'Aa123456'
+```
+
 
 ### letsencrypt parameters ###
 
 **certbot_admin_email** --> Email Address for letsencrypt certificate generation.
+
+```bash
+## letsencrypt parameters
+certbot_admin_email: yourmail@mail.com
+```
 
 ### Wordpress parameters ###
 
@@ -68,6 +71,19 @@ add_host: true # Set true when you are adding host to exist installation
 - **admin_user** --> Admin user for wordpress.
 - **admin_password** --> Admin password for wordpress.
 - **title** --> Title for the site (title without spaces!).
+
+```bash
+## Wordpress parameters
+wordpress_path: '/blog' # Enter the path for wordpress '/blog' or '/wp' or '/' for example.
+wp_db_name: wpdb_{{ hostname_no_fqdn }}
+wp_db_user: wpdbuser
+wp_db_password: 'Aa123456'
+table_prefix: wp_
+admin_user: gal
+admin_password: Aa123456
+admin_email: youreamail@mail.com
+title: gal10
+```
 
 Example Playbook
 ----------------

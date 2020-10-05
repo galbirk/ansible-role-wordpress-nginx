@@ -1,0 +1,47 @@
+---
+- name: Install unzip
+  apt:
+    name: unzip
+    state: present
+
+- name: Download wordpress
+  get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /tmp/latest.tar.gz
+    mode: '0666'
+
+- name: Create hostname folder
+  file:
+    path: /var/www/{{ hostname }}
+    state: directory
+
+- name: Unzip wordpress
+  unarchive:
+    src: /tmp/latest.tar.gz
+    dest: /var/www/{{ hostname }}
+    remote_src: yes
+
+- name: rename wordpress folder
+  shell: mv /var/www/{{ hostname }}/wordpress /var/www/{{ hostname }}{{ wordpress_path }}
+  args: 
+    executable: /bin/bash
+  when: 'wordpress_path != "/"'
+
+- name: rename wordpress folder
+  shell: mv /var/www/{{ hostname }}/wordpress/* /var/www/{{ hostname }}{{ wordpress_path }}
+  args: 
+    executable: /bin/bash
+  when: 'wordpress_path == "/"'
+
+- name: delete wordpress folder
+  file:
+    path: /var/www/{{ hostname }}/wordpress
+    state: absent
+
+- name: Change wordpress dir owner to www-data
+  file:
+    path: /var/www/{{ hostname }}
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    recurse: True

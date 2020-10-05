@@ -1,0 +1,59 @@
+---
+- name: update apt
+  apt:
+    update_cache: yes
+
+- name: install letsencrypt
+  apt:
+    name: ['letsencrypt', 'certbot']
+    state: present
+
+- name: Check if certificate already exists.
+  stat:
+    path: /etc/letsencrypt/live/{{ hostname }}/cert.pem
+  register: letsencrypt_cert
+ 
+- name: Stop services to allow certbot to generate a cert.
+  service:
+    name: nginx
+    state: stopped
+  when: not letsencrypt_cert.stat.exists
+
+- name: Generate new certificate if one doesn't exist.
+  command: /usr/bin/certbot certonly --standalone --noninteractive --agree-tos --email {{ certbot_admin_email }}  -d {{ hostname }}
+  when: not letsencrypt_cert.stat.exists
+
+- name: Start services after cert has been generated.
+  service:
+    name: nginx
+    state: started
+  when: not letsencrypt_cert.stat.exists
+
+- name: move nginx template
+  template:
+    src: nginx_conf.j2
+    dest: /etc/nginx/sites-available/{{ hostname }}
+
+- name: reload nginx and php
+  service:
+    name: "{{ item }}"
+    state: reloaded
+  with_items:
+    - nginx
+    - php7.4-fpm
+
+- name: Add cron job for certbot renewal (if configured).
+  cron:
+    name: Certbot automatic renewal.
+    job: /usr/bin/certbot renew --quiet --no-self-upgrade  >> /var/log/letsencrypt/renew.log
+    minute: "30"
+    hour: "3"
+    user: root
+  ignore_errors: yes
+
+- name: Change owner to www-data
+  file:
+    path: /var/www/{{ hostname }}
+    owner: www-data
+    group: www-data
+    recurse: true

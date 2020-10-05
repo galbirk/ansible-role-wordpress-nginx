@@ -1,0 +1,36 @@
+---
+- name: Add wordpress configuration
+  template:
+    src: wp-config.php.j2
+    dest: /var/www/{{ hostname }}{{ wordpress_path }}/wp-config.php
+    mode: '0755'
+
+- name: Change owner to www-data
+  file:
+    path: /var/www/{{ hostname }}
+    owner: www-data
+    group: www-data
+    recurse: true
+
+- name: download wp-cli 
+  get_url:
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: /tmp/
+    mode: '0755'
+
+- name: Check that the cli exists
+  stat:
+    path: /usr/local/bin/wp
+  register: stat_result
+
+- name: move cli to /usr/local/bin/wp
+  shell: mv /tmp/wp-cli.phar /usr/local/bin/wp
+  args:
+    executable: /bin/bash
+  when: not stat_result.stat.exists
+
+- name: Install blog
+  shell: sudo -u www-data -- wp core install --url={{ hostname }}{{ wordpress_path }} --title={{ title }} --admin_user={{ admin_user }} --admin_password={{ admin_password }} --admin_email={{ admin_email }}
+  args:
+    executable: /bin/bash
+    chdir: /var/www/{{ hostname }}{{ wordpress_path }}

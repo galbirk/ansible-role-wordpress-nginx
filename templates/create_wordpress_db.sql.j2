@@ -1,0 +1,6 @@
+CREATE DATABASE {{ wp_db_name }};
+{% if not add_host %}
+CREATE USER '{{ wp_db_user }}'@'localhost' IDENTIFIED BY '{{ wp_db_password }}';
+{% endif %}
+GRANT ALL ON {{ wp_db_name }}.* TO '{{ wp_db_user }}'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;

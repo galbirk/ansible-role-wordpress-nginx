@@ -1,0 +1,22 @@
+---
+# tasks file for wordpress_nginx_ssl_role
+- include: nginx_install.yml
+  when: install_nginx
+
+- include: mariadb_install.yml
+  when: install_mariadb
+
+- include: php_install.yml
+  when: install_php
+
+- include: wordpress_db.yml
+  when: install_wordpress
+
+- include: wordpress_install.yml
+  when: install_wordpress
+
+- include: configure_nginx.yml
+
+- include: letsencrypt.yml
+
+- include: after_installation.yml
